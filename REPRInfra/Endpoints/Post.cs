@@ -5,6 +5,7 @@ using REPR_API.Models;
 using REPR_API.REPRInfra.EndpointMapper;
 using REPR_API.REPRInfra.RequestExtensions;
 using REPR_API.Validators;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
  
 
@@ -21,6 +22,7 @@ public class Post : IEndPointMapper
 
     }
 
+    #region Commented
     //public void MapEndpoint(IEndpointRouteBuilder app)
     //{
     //    app.MapPost("post/{model}", async (HttpContext ctx, string model, EntityBase data) =>
@@ -63,7 +65,8 @@ public class Post : IEndPointMapper
     //        }
     //        return null;
     //    });
-    //}
+    //} 
+    #endregion
 
 
 
@@ -77,10 +80,12 @@ public class Post : IEndPointMapper
             ctx.Request.EnableBuffering();
             ctx.Request.Body.Position = 0;
             string requestBody = string.Empty;
+            #region Commented
             //using (StreamReader reader = new StreamReader(ctx.Request.Body))
             //{
             //      requestBody = await reader.ReadToEndAsync();
-            //}
+            //} 
+            #endregion
 
             requestBody = await ctx.Request.Body.ReadAsStringAsync();
             if (requestBody != null || requestBody.Length != 0)
@@ -94,24 +99,38 @@ public class Post : IEndPointMapper
                 var entityTypeName = configuration[$"API:{model}:Model"];
                 // Read the Model Entity Type
                 var entityType = Type.GetType(entityTypeName);
+                // Json Serialization Options
+                JsonSerializerOptions options = new JsonSerializerOptions();
+                
                 // Store data from Body into the Entity Object and create its instance
                 object? entityInstance = JsonSerializer.Deserialize(requestBody, entityType);
                 // Create an Instance of Command
-                object? instance = Activator.CreateInstance(type, entityInstance);
+                object? commandInstance = Activator.CreateInstance(type, entityInstance);
 
+                //// Validator
+                //var validatorTypeName = configuration[$"API:{model}:Validator"];
+                //// Vaidator Type Instance
+                //var validatorType = Type.GetType(validatorTypeName);
+                //var validatorInstance = Activator.CreateInstance(validatorType);
+                ////Valiate the Entity
+                //var validateMethod = validatorInstance.GetType().GetMethod("Validate");
+                //var validationResult = (FluentValidation.Results.ValidationResult)validateMethod.Invoke(validatorInstance, new[] { entityInstance });
+                //if (validationResult.IsValid)
+                //{
+                    var resultResponse = await mediator.Send(commandInstance);
+                    return Results.Ok(resultResponse);
+                //}
 
-                var resultResponse = await mediator.Send(instance);
-                return Results.Ok(resultResponse);
+              
 
-
-
+                #region Commented
 
                 //if (model == "Category")
                 //{
                 //    Category? category = JsonSerializer.Deserialize<Category>(requestBody);
                 //    var validator = new CategoryValidator();
-                //    var validationResult = validator.Validate(category);
-                //    if (validationResult.IsValid)
+                //    var validationResult1 = validator.Validate(category);
+                //    if (validationResult1.IsValid)
                 //    {
                 //        var resultCategories = await mediator.Send(new CreateCategoryCommand(category));
                 //        return Results.Ok(resultCategories);
@@ -130,6 +149,7 @@ public class Post : IEndPointMapper
                 //    }
                 //    return Results.BadRequest(validationResult);
                 //}
+                #endregion
             }
             return null;
         });

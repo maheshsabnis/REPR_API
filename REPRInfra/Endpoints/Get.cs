@@ -10,25 +10,43 @@ namespace REPR_API.Endpoints;
 public class Get : IEndPointMapper
 {
     IMediator mediator;
+    IConfiguration configuration;
     
-    public Get(IMediator mediator)
+    public Get(IMediator mediator,IConfiguration configuration)
     {
         this.mediator = mediator;
+        this.configuration = configuration;
     }
     public  void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapGet("get/{model}",async(HttpContext ctx, string model) => {
-            if (model == "category")
+
+            // Read the Post request Command Value from appsettings.json
+            var typeName = configuration[$"API:{model}:Get"];
+            // Read the Command Type Name
+            var type = Type.GetType(typeName);
+            
+            object? queryInstance = Activator.CreateInstance(type);
+            if (queryInstance != null)
             {
-                var resultCategories = await mediator.Send(new GetCategoriesQuery());
-                return Results.Ok(resultCategories);
-            }
-            if (model == "product")
-            {
-                var resultProducts = await mediator.Send(new GetProductsQuery());
-                return Results.Ok(resultProducts);
+                var resultResponse = await mediator.Send(queryInstance);
+                return Results.Ok(resultResponse);
             }
             return null;
+
+            #region Commented
+            //if (model == "category")
+            //{
+            //    var resultCategories = await mediator.Send(new GetCategoriesQuery());
+            //    return Results.Ok(resultCategories);
+            //}
+            //if (model == "product")
+            //{
+            //    var resultProducts = await mediator.Send(new GetProductsQuery());
+            //    return Results.Ok(resultProducts);
+            //} 
+            #endregion
+           
         });
     }
 }
