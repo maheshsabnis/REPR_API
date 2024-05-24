@@ -9,16 +9,21 @@ namespace REPR_API.Handlers.PriductHandlers
     public class GetProductByIdHandler : IRequestHandler<GetProductById, ResponseObject<Product>>
     {
 
-        IDataService<Product, int> service;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
 
-        public GetProductByIdHandler(IDataService<Product, int> service)
+        public GetProductByIdHandler(IServiceScopeFactory serviceScopeFactory)
         {
-            this.service = service;
+            _serviceScopeFactory = serviceScopeFactory;
         }
 
         public async Task<ResponseObject<Product>> Handle(GetProductById request, CancellationToken cancellationToken)
         {
-            return await service.GetByIdAsync(request.Id);
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var prdServ = scope.ServiceProvider.GetService<IDataService<Product, int>>();
+                return await prdServ.GetByIdAsync(request.Id);
+            }
+             
         }
     }
 }

@@ -6,5 +6,10 @@ namespace REPR_API.Queries.ProductQuery
     public class GetProductById:IRequest<ResponseObject<Product>>
     {
         public int Id { get; set; }
+
+        public GetProductById(int id)
+        {
+            Id = id;
+        }
     }
 }

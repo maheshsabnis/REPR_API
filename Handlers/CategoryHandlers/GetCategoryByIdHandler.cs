@@ -5,7 +5,7 @@ using REPR_API.Services;
 
 namespace REPR_API.Handlers.CategoryHandlers
 {
-    public class GetCategoryByIdHandler : IRequestHandler<GetCategoryById, ResponseObject<Category>>
+    public class GetCategoryByIdHandler : IRequestHandler<GetCategoryByIdQuery, ResponseObject<Category>>
     {
 
         private readonly IServiceScopeFactory _serviceScopeFactory;
@@ -14,7 +14,7 @@ namespace REPR_API.Handlers.CategoryHandlers
         {
             _serviceScopeFactory = serviceScopeFactory;
         }
-        public async Task<ResponseObject<Category>> Handle(GetCategoryById request, CancellationToken cancellationToken)
+        public async Task<ResponseObject<Category>> Handle(GetCategoryByIdQuery request, CancellationToken cancellationToken)
         {
             using (var scope = _serviceScopeFactory.CreateScope())
             {

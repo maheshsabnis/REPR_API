@@ -80,12 +80,7 @@ public class Post : IEndPointMapper
             ctx.Request.EnableBuffering();
             ctx.Request.Body.Position = 0;
             string requestBody = string.Empty;
-            #region Commented
-            //using (StreamReader reader = new StreamReader(ctx.Request.Body))
-            //{
-            //      requestBody = await reader.ReadToEndAsync();
-            //} 
-            #endregion
+            
 
             requestBody = await ctx.Request.Body.ReadAsStringAsync();
             if (requestBody != null || requestBody.Length != 0)
@@ -99,8 +94,7 @@ public class Post : IEndPointMapper
                 var entityTypeName = configuration[$"API:{model}:Model"];
                 // Read the Model Entity Type
                 var entityType = Type.GetType(entityTypeName);
-                // Json Serialization Options
-                JsonSerializerOptions options = new JsonSerializerOptions();
+               
                 
                 // Store data from Body into the Entity Object and create its instance
                 object? entityInstance = JsonSerializer.Deserialize(requestBody, entityType);
@@ -123,33 +117,7 @@ public class Post : IEndPointMapper
 
               
 
-                #region Commented
-
-                //if (model == "Category")
-                //{
-                //    Category? category = JsonSerializer.Deserialize<Category>(requestBody);
-                //    var validator = new CategoryValidator();
-                //    var validationResult1 = validator.Validate(category);
-                //    if (validationResult1.IsValid)
-                //    {
-                //        var resultCategories = await mediator.Send(new CreateCategoryCommand(category));
-                //        return Results.Ok(resultCategories);
-                //    }
-                //    return Results.BadRequest(validationResult);
-                //}
-                //if (model == "Product")
-                //{
-                //    Product? product = JsonSerializer.Deserialize<Product>(requestBody);
-                //    var validator = new ProductValiator();
-                //    var validationResult = validator.Validate(product);
-                //    if (validationResult.IsValid)
-                //    {
-                //        var resultProducts = await mediator.Send(new CreateProductCommand(product));
-                //        return Results.Ok(resultProducts);
-                //    }
-                //    return Results.BadRequest(validationResult);
-                //}
-                #endregion
+                
             }
             return null;
         });
