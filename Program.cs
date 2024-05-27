@@ -8,7 +8,10 @@ using REPR_API.Models;
 using REPR_API.REPRInfra.EndpointExtensions;
 using REPR_API.Services;
 using System.Reflection;
- 
+
+// For JSON Seriaization Policy
+using JsonOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +24,11 @@ builder.Services.AddDbContext<EshoppingDbContext>(options =>
 
 
 builder.Services.RegisterRequestHandlers();
+
+builder.Services.Configure<JsonOptions>(options =>
+{
+    options.SerializerOptions.PropertyNamingPolicy = null;
+});
 
 builder.Services.AddTransient<IDataService<Category, int>, CategoryDataService>();
 builder.Services.AddTransient<IDataService<Product, int>, ProductDataService>();
