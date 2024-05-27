@@ -38,7 +38,6 @@ public class Post : IEndPointMapper
             ctx.Request.Body.Position = 0;
             string requestBody = string.Empty;
             
-
             requestBody = await ctx.Request.Body.ReadAsStringAsync();
             if (requestBody != null || requestBody?.Length != 0)
             {
