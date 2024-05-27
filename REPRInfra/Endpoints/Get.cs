@@ -34,18 +34,7 @@ public class Get : IEndPointMapper
             }
             return null;
 
-            #region Commented
-            //if (model == "category")
-            //{
-            //    var resultCategories = await mediator.Send(new GetCategoriesQuery());
-            //    return Results.Ok(resultCategories);
-            //}
-            //if (model == "product")
-            //{
-            //    var resultProducts = await mediator.Send(new GetProductsQuery());
-            //    return Results.Ok(resultProducts);
-            //} 
-            #endregion
+            
            
         });
     }
