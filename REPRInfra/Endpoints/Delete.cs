@@ -15,7 +15,7 @@ public class Delete : IEndPointMapper
         this.configuration = configuration;
 
     }
-    public void MapEndpoint(IEndpointRouteBuilder app)
+    public void MapAPIEndpoint(IEndpointRouteBuilder app)
     {
         app.MapDelete("delete/{model}/{id}", async (string model, int id) => {
             // Read the Post request Command Value from appsettings.json

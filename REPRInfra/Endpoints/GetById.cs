@@ -17,7 +17,7 @@ public class GetById : IEndPointMapper
         this.mediator = mediator;
         this.configuration = configuration;
     }
-    public  void MapEndpoint(IEndpointRouteBuilder app)
+    public  void MapAPIEndpoint(IEndpointRouteBuilder app)
     {
         app.MapGet("get/{model}/{id}",async(string model,int id) => {
 

@@ -18,11 +18,11 @@ public class Get : IEndPointMapper
         this.mediator = mediator;
         this.configuration = configuration;
     }
-    public  void MapEndpoint(IEndpointRouteBuilder app)
+    public  void MapAPIEndpoint(IEndpointRouteBuilder app)
     {
         app.MapGet("get/{model}",async(HttpContext ctx, string model) => {
 
-            // Read the Post request Command Value from appsettings.json
+            // Read the Get request Command Value from appsettings.json
             var typeName = configuration[$"API:{model}:Get"];
             // Read the Command Type Name
             var type = Type.GetType(typeName);
@@ -34,8 +34,6 @@ public class Get : IEndPointMapper
                 return Results.Ok(resultResponse);
             }
             return null;
-
-            
            
         });
     }

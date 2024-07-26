@@ -9,7 +9,7 @@ namespace REPR_API.Validators
         {
             RuleFor(p => p.ProductId).NotEmpty();
             RuleFor(p => p.ProductName).NotEmpty();
-            RuleFor(p=>p.Manufacturer).NotEmpty();
+            RuleFor(p=> p.Manufacturer).NotEmpty();
             RuleFor(p=>p.Price).GreaterThan(0);
             RuleFor(p=>p.CategoryUniqueId).NotNull();
             RuleFor(p => p.CategoryUniqueId).GreaterThan(0);

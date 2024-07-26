@@ -23,7 +23,7 @@ public class Post : IEndPointMapper
 
     }
 
-    public void MapEndpoint(IEndpointRouteBuilder app)
+    public void MapAPIEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPost("post/{model}", async (HttpContext ctx, string model, EntityBase data) =>
         {

@@ -18,7 +18,7 @@ public class Put : IEndPointMapper
         this.configuration = configuration;
 
     }
-    public void MapEndpoint(IEndpointRouteBuilder app)
+    public void MapAPIEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPut("put/{model}/{id}", async (HttpContext ctx, string model,int id, EntityBase data) =>
         {
