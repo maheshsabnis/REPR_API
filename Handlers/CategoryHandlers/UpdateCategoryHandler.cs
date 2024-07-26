@@ -7,16 +7,23 @@ namespace REPR_API.Handlers.CategoryHandlers
 {
     public class UpdateCategoryHandler : IRequestHandler<UpdateCategoryCommand, ResponseObject<Category>>
     {
-       IDataService<Category,int> service;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
 
-        public UpdateCategoryHandler(IDataService<Category, int> service)
+        public UpdateCategoryHandler(IServiceScopeFactory serviceScopeFactory)
         {
-            this.service = service;
+            _serviceScopeFactory = serviceScopeFactory;
         }
          
         public async Task<ResponseObject<Category>> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
         {
-            return await service.UpdateAsync(request.Category.CategoryUniqueId,request.Category);
+
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var catServ = scope.ServiceProvider.GetService<IDataService<Category, int>>();
+                return await catServ.UpdateAsync(request.Category.CategoryUniqueId, request.Category);
+            }
+
+            
         }
     }
 }

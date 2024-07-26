@@ -5,18 +5,23 @@ using REPR_API.Services;
 
 namespace REPR_API.Handlers.CategoryHandlers
 {
-    public class GetCategoryByIdHandler : IRequestHandler<GetCategoryById, ResponseObject<Category>>
+    public class GetCategoryByIdHandler : IRequestHandler<GetCategoryByIdQuery, ResponseObject<Category>>
     {
 
-        IDataService<Category, int> service;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
 
-        public GetCategoryByIdHandler(IDataService<Category, int> service)
+        public GetCategoryByIdHandler(IServiceScopeFactory serviceScopeFactory)
         {
-            this.service = service;
+            _serviceScopeFactory = serviceScopeFactory;
         }
-        public async Task<ResponseObject<Category>> Handle(GetCategoryById request, CancellationToken cancellationToken)
+        public async Task<ResponseObject<Category>> Handle(GetCategoryByIdQuery request, CancellationToken cancellationToken)
         {
-            return await service.GetByIdAsync(request.Id);
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var catServ = scope.ServiceProvider.GetService<IDataService<Category, int>>();
+                return await catServ.GetByIdAsync(request.Id);
+            }
+           
         }
     }
 }

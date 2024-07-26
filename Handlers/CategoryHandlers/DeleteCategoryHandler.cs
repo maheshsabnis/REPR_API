@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using REPR_API.Commands.CategoryCommand;
 using REPR_API.Models;
 using REPR_API.Services;
@@ -7,16 +8,23 @@ namespace REPR_API.Handlers.CategoryHandlers
 {
     public class DeleteCategoryHandler : IRequestHandler<DeleteCategoryCommand, ResponseObject<Category>>
     {
-       IDataService<Category,int> service;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
 
-        public DeleteCategoryHandler(IDataService<Category, int> service)
+        public DeleteCategoryHandler(IServiceScopeFactory serviceScopeFactory)
         {
-            this.service = service;
+            _serviceScopeFactory = serviceScopeFactory;
         }
          
         public async Task<ResponseObject<Category>> Handle(DeleteCategoryCommand request, CancellationToken cancellationToken)
         {
-            return await service.DeleteAsync(request.Id);
+
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var catServ = scope.ServiceProvider.GetService<IDataService<Category, int>>();
+                return await catServ.DeleteAsync(request.Id);
+            }
+
+        
         }
     }
 }

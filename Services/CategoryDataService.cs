@@ -75,7 +75,7 @@ namespace REPR_API.Services
                     throw new Exception($"Record by Id= {id} is not found");
                 response.Record = entity;
                 response.StatusCode = 200;
-                response.Message = "Record deleted successfuly";
+                response.Message = "Record found successfuly";
                 return response;
             }
             catch (Exception ex)

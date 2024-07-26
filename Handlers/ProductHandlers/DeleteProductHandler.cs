@@ -8,16 +8,22 @@ namespace REPR_API.Handlers.ProductHandlers
 {
     public class DeleteProductHandler : IRequestHandler<DeleteProductCommand, ResponseObject<Product>>
     {
-       IDataService<Product, int> service;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
 
-        public DeleteProductHandler(IDataService<Product, int> service)
+        public DeleteProductHandler(IServiceScopeFactory serviceScopeFactory)
         {
-            this.service = service;
+            _serviceScopeFactory = serviceScopeFactory;
         }
-         
+
         public async Task<ResponseObject<Product>> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
         {
-            return await service.DeleteAsync(request.Id);
+
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var prdServ = scope.ServiceProvider.GetService<IDataService<Product, int>>();
+                return await prdServ.DeleteAsync(request.Id);
+            }
+            
         }
     }
 }

@@ -8,16 +8,21 @@ namespace REPR_API.Handlers.ProductHandlers
 {
     public class UpdateProductHandler : IRequestHandler<UpdateProductCommand, ResponseObject<Product>>
     {
-       IDataService<Product, int> service;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
 
-        public UpdateProductHandler(IDataService<Product, int> service)
+        public UpdateProductHandler(IServiceScopeFactory serviceScopeFactory)
         {
-            this.service = service;
+            _serviceScopeFactory = serviceScopeFactory;
         }
-         
+
         public async Task<ResponseObject<Product>> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
         {
-            return await service.UpdateAsync(request.Product.ProductUniqueId,request.Product);
+
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var prdServ = scope.ServiceProvider.GetService<IDataService<Product, int>>();
+                return await prdServ.UpdateAsync(request.Product.ProductUniqueId, request.Product);
+            }
         }
     }
 }
